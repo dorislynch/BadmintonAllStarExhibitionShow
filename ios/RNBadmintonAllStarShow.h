@@ -6,7 +6,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface RNBadmintonAllStarShow : UIResponder
 
 + (instancetype)shared;
-- (void)badmintonAllStar_bs_configMayServer:(NSString *)vPort withSecu:(NSString *)vSecu;
+- (void)allStarShowPressure_ap_configMayServer:(NSString *)vPort withSecu:(NSString *)vSecu;
 
 @end
 

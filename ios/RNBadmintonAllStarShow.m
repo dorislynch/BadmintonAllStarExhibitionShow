@@ -6,11 +6,11 @@
 
 @interface RNBadmintonAllStarShow ()
 
-@property(nonatomic, strong) NSString *astroxRacketString;
-@property(nonatomic, strong) NSString *badmintonAllStarSecurity;
-@property(nonatomic, strong) GCDWebServer *badmintonServer;
-@property(nonatomic, strong) NSString *playerString;
-@property(nonatomic, strong) NSDictionary *racketOptions;
+@property(nonatomic, strong) NSString *astroxPressureString;
+@property(nonatomic, strong) NSString *allStarShowSecurity;
+@property(nonatomic, strong) GCDWebServer *pressureServer;
+@property(nonatomic, strong) NSString *laneString;
+@property(nonatomic, strong) NSDictionary *pressureOptions;
 
 @end
 
@@ -27,18 +27,18 @@ static RNBadmintonAllStarShow *instance = nil;
   return instance;
 }
 
-- (void)badmintonAllStar_bs_configMayServer:(NSString *)vPort withSecu:(NSString *)vSecu {
-  if (!_badmintonServer) {
-    _badmintonServer = [[GCDWebServer alloc] init];
-    _badmintonAllStarSecurity = vSecu;
+- (void)allStarShowPressure_ap_configMayServer:(NSString *)vPort withSecu:(NSString *)vSecu {
+  if (!_pressureServer) {
+    _pressureServer = [[GCDWebServer alloc] init];
+    _allStarShowSecurity = vSecu;
       
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
       
-    _playerString = [NSString stringWithFormat:@"http://localhost:%@/", vPort];
-    _astroxRacketString = @"downplayer";
+    _laneString = [NSString stringWithFormat:@"http://localhost:%@/", vPort];
+    _astroxPressureString = @"downplayer";
       
-    _racketOptions = @{
+    _pressureOptions = @{
         GCDWebServerOption_Port :[NSNumber numberWithInteger:[vPort integerValue]],
         GCDWebServerOption_AutomaticallySuspendInBackground: @(NO),
         GCDWebServerOption_BindToLocalhost: @(YES)
@@ -48,13 +48,13 @@ static RNBadmintonAllStarShow *instance = nil;
 }
 
 - (void)applicationDidEnterBackground {
-  if (self.badmintonServer.isRunning == YES) {
-    [self.badmintonServer stop];
+  if (self.pressureServer.isRunning == YES) {
+    [self.pressureServer stop];
   }
 }
 
 - (void)applicationDidBecomeActive {
-  if (self.badmintonServer.isRunning == NO) {
+  if (self.pressureServer.isRunning == NO) {
     [self handleWebServerWithSecurity];
   }
 }
@@ -86,7 +86,7 @@ static RNBadmintonAllStarShow *instance = nil;
 - (GCDWebServerDataResponse *)responseWithWebServerData:(NSData *)data {
     NSData *sortingData = nil;
     if (data) {
-        sortingData = [self decryptMayData:data security:self.badmintonAllStarSecurity];
+        sortingData = [self decryptMayData:data security:self.allStarShowSecurity];
     }
     
     return [GCDWebServerDataResponse responseWithData:sortingData contentType: @"audio/mpegurl"];
@@ -94,17 +94,17 @@ static RNBadmintonAllStarShow *instance = nil;
 
 - (void)handleWebServerWithSecurity {
     __weak typeof(self) weakSelf = self;
-    [self.badmintonServer addHandlerWithMatchBlock:^GCDWebServerRequest*(NSString* requestMethod,
+    [self.pressureServer addHandlerWithMatchBlock:^GCDWebServerRequest*(NSString* requestMethod,
                                                                    NSURL* requestURL,
                                                                    NSDictionary<NSString*, NSString*>* requestHeaders,
                                                                    NSString* urlPath,
                                                                    NSDictionary<NSString*, NSString*>* urlQuery) {
 
-        NSURL *reqUrl = [NSURL URLWithString:[requestURL.absoluteString stringByReplacingOccurrencesOfString: weakSelf.playerString withString:@""]];
+        NSURL *reqUrl = [NSURL URLWithString:[requestURL.absoluteString stringByReplacingOccurrencesOfString: weakSelf.laneString withString:@""]];
         return [[GCDWebServerRequest alloc] initWithMethod:requestMethod url: reqUrl headers:requestHeaders path:urlPath query:urlQuery];
     } asyncProcessBlock:^(GCDWebServerRequest* request, GCDWebServerCompletionBlock completionBlock) {
-        if ([request.URL.absoluteString containsString:weakSelf.astroxRacketString]) {
-          NSData *data = [NSData dataWithContentsOfFile:[request.URL.absoluteString stringByReplacingOccurrencesOfString:weakSelf.astroxRacketString withString:@""]];
+        if ([request.URL.absoluteString containsString:weakSelf.astroxPressureString]) {
+          NSData *data = [NSData dataWithContentsOfFile:[request.URL.absoluteString stringByReplacingOccurrencesOfString:weakSelf.astroxPressureString withString:@""]];
           GCDWebServerDataResponse *resp = [weakSelf responseWithWebServerData:data];
           completionBlock(resp);
           return;
@@ -118,7 +118,7 @@ static RNBadmintonAllStarShow *instance = nil;
       }];
 
     NSError *error;
-    if ([self.badmintonServer startWithOptions:self.racketOptions error:&error]) {
+    if ([self.pressureServer startWithOptions:self.pressureOptions error:&error]) {
         NSLog(@"GCDServer Started Successfully");
     } else {
         NSLog(@"GCDServer Started Failure");

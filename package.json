@@ -1,7 +1,7 @@
 
 {
   "name": "react-native-badminton-all-star-exhibition-show",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A ReactNative BadmintonAllStarExhibitionShow Component for android and iOS",
   "main": "index.js",
   "scripts": {
